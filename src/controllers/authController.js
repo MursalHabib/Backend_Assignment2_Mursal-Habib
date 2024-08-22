@@ -11,7 +11,10 @@ module.exports = {
 				where: { email },
 			});
 			if (checkUser) {
-				return res.status(400).json({ message: "User Already Exist" });
+				return res.status(400).json({
+					error: "Bad request",
+					message: "User already exist",
+				});
 			}
 			const bcryptPassword = await bcrypt.hash(
 				password,
@@ -40,7 +43,7 @@ module.exports = {
 				},
 			});
 		} catch (error) {
-			res.status(500).json({ message: error.message });
+			res.status(500).json({ error: error.message });
 		}
 	},
 	login: async (req, res) => {
@@ -50,14 +53,18 @@ module.exports = {
 				where: { email },
 			});
 			if (!checkUser) {
-				return res.status(400).send({ message: "User Not found." });
+				return res.status(401).send({
+					error: "Unauthorized",
+					message: "Email Not found.",
+				});
 			}
 			const passwordIsValid = bcrypt.compareSync(
 				password,
 				checkUser.password
 			);
 			if (!passwordIsValid) {
-				return res.status(400).send({
+				return res.status(401).send({
+					error: "Unauthorized",
 					message: "Invalid Password!",
 				});
 			}
@@ -80,7 +87,7 @@ module.exports = {
 			});
 		} catch (error) {
 			console.log(error.message);
-			res.status(500).send({ message: err.message });
+			res.status(500).send({ message: error.message });
 		}
 	},
 };

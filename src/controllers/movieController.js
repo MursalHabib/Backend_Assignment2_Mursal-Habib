@@ -19,7 +19,9 @@ module.exports = {
 		try {
 			const movie = await Movies.findByPk(Number(id));
 			if (!movie) {
-				return res.status(404).json({ message: "Data not found" });
+				return res
+					.status(404)
+					.json({ error: "Not found", message: "Data not found" });
 			}
 			return res.send(movie);
 		} catch (error) {
