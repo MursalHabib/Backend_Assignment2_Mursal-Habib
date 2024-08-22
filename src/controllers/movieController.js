@@ -5,7 +5,7 @@ module.exports = {
 		const { limit, page } = req.query;
 		try {
 			const movies = await Movies.findAndCountAll({
-				offset: !page ? null : 0 + (page - 1) * limit,
+				offset: !page || !limit ? null : 0 + (page - 1) * limit,
 				limit: !limit ? null : limit,
 			});
 			return res.send({ movies, page, limit });
